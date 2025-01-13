@@ -10,15 +10,35 @@ npm install react-native-korapay-checkout
 
 ## Usage
 
-
 ```js
-import { multiply } from 'react-native-korapay-checkout';
+import { useKorapayCheckout } from 'react-native-korapay-checkout';
 
 // ...
 
-const result = await multiply(3, 7);
-```
+ const { CheckoutComponent, initiatePayment } = useKorapayCheckout(
+    {
+      paymentDetails: {
+        publicKey: 'pk_test_***************************Ghx', /// log on to merchant.koraapi.com to get your own APi key 
+        reference: 'Generate random key for the refrence', //  example `key${Math.random()}`
+        amount: 3000,
+        currency: 'NGN',
+        customer: {
+          name: 'John Doe',
+          email: 'john@doe.com'
+        }
+      },
+      onClose: () => console.log('Payment closed'),
+      onSuccess: (data: any) => console.log('Payment successful:', data),
+      onFailed: (data: any) => console.log('Payment failed:', data)
+    }
+  );
 
+  then call the checkout component in the Jsx 
+
+  where you want to display the checkout modal
+
+  <CheckoutComponent/>
+```
 
 ## Contributing
 
