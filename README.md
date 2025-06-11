@@ -18,8 +18,8 @@ import { usekoraCheckout } from 'react-native-kora-checkout';
  const { CheckoutComponent, initiatePayment } = usekoraCheckout(
     {
       paymentDetails: {
-        publicKey: 'pk_test_***************************Ghx', /// log on to merchant.koraapi.com to get your own APi key
-        reference: 'Generate random key for the refrence', //  example `key${Math.random()}`
+        publicKey: 'pk_test_***************************Ghx', /// log on to merchant.korapay.com to get your own APi key
+        reference: 'Generate random key for the refrence',
         amount: 3000,
         currency: 'NGN',
         customer: {
