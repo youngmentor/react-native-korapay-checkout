@@ -1,15 +1,15 @@
 import { useRef, useCallback, useState } from 'react';
 import WebView from 'react-native-webview';
 import { StyleSheet, View, Dimensions } from 'react-native';
-import type { KorapayConfig } from '../types/IKorapayprops';
+import type { koraConfig } from '../types/Ikoraprops';
 
-export const useKorapayCheckout = ({
+export const useKoraCheckout = ({
   paymentDetails,
   onClose,
   onSuccess,
   onFailed,
 }: {
-  paymentDetails: KorapayConfig;
+  paymentDetails: koraConfig;
   onClose?: () => void;
   onSuccess?: (data: any) => void;
   onFailed?: (data: any) => void;
@@ -17,12 +17,70 @@ export const useKorapayCheckout = ({
   const webViewRef = useRef<WebView | null>(null);
   const [isCheckoutVisible, setIsCheckoutVisible] = useState(false);
 
+  const injectedJavaScript = `
+    function loadkoraScript() {
+      const script = document.createElement('script');
+      script.src = 'https://korablobstorage.blob.core.windows.net/modal-bucket/kora-collections.min.js';
+      script.async = true;
+      
+      script.onload = function() {
+        window.ReactNativeWebView.postMessage('SCRIPT_LOADED');
+        initializekora();
+      };
+      
+      script.onerror = function() {
+        window.ReactNativeWebView.postMessage(JSON.stringify({
+          type: 'ERROR',
+          data: { message: 'Failed to load kora script' }
+        }));
+      };
+      
+      document.body.appendChild(script);
+    }
+
+    const initializekora = () => {
+      try {
+        if (!window.kora) {
+          throw new Error('kora object not found');
+        }
+
+        window.kora.initialize({
+          key: "${paymentDetails.publicKey}",
+          reference: "${paymentDetails.reference}",
+          amount: ${paymentDetails.amount},
+          currency: "${paymentDetails.currency}",
+          customer: {
+            name: "${paymentDetails.customer.name}",
+            email: "${paymentDetails.customer.email}"
+          },
+          onClose: function () {
+            window.ReactNativeWebView.postMessage('PAYMENT_CLOSED');
+          },
+          onSuccess: function (data) {
+            window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'SUCCESS', data }));
+          },
+          onFailed: function (data) {
+            window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'FAILED', data }));
+          }
+        });
+        window.ReactNativeWebView.postMessage('kora_INITIALIZED');
+      } catch (error) {
+        window.ReactNativeWebView.postMessage(JSON.stringify({
+          type: 'ERROR',
+          data: { message: error.message }
+        }));
+      }
+    };
+
+    loadkoraScript();
+    true;
+  `;
+
   const htmlContent = `
     <!DOCTYPE html>
     <html>
     <head>
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-      <script src="https://korablobstorage.blob.core.windows.net/modal-bucket/korapay-collections.min.js"></script>
       <style>
         body {
           margin: 0;
@@ -32,6 +90,7 @@ export const useKorapayCheckout = ({
           display: flex;
           justify-content: center;
           align-items: center;
+          background-color: rgba(0, 0, 0, 0.5);
         }
         #payment-root {
           width: 100%;
@@ -41,30 +100,6 @@ export const useKorapayCheckout = ({
     </head>
     <body>
       <div id="payment-root"></div>
-      <script>
-        const initializeKorapay = () => {
-          window.Korapay.initialize({
-            key: "${paymentDetails.publicKey}",
-            reference: "${paymentDetails.reference}",
-            amount: ${paymentDetails.amount},
-            currency: "${paymentDetails.currency}",
-            customer: {
-              name: "${paymentDetails.customer.name}",
-              email: "${paymentDetails.customer.email}"
-            },
-            onClose: function () {
-              window.ReactNativeWebView && window.ReactNativeWebView.postMessage('PAYMENT_CLOSED');
-            },
-            onSuccess: function (data) {
-              window.ReactNativeWebView && window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'SUCCESS', data }));
-            },
-            onFailed: function (data) {
-              window.ReactNativeWebView && window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'FAILED', data }));
-            }
-          });
-        }
-        window.initializeKorapay = initializeKorapay;
-      </script>
     </body>
     </html>
   `;
@@ -72,12 +107,6 @@ export const useKorapayCheckout = ({
   const handleMessage = useCallback(
     (event: { nativeEvent: { data: string } }) => {
       const message = event.nativeEvent.data;
-
-      if (message === 'PAYMENT_CLOSED') {
-        setIsCheckoutVisible(false);
-        onClose?.();
-        return;
-      }
 
       try {
         const parsedMessage = JSON.parse(message);
@@ -87,9 +116,14 @@ export const useKorapayCheckout = ({
         } else if (parsedMessage.type === 'FAILED') {
           setIsCheckoutVisible(false);
           onFailed?.(parsedMessage.data);
+        } else if (parsedMessage.type === 'ERROR') {
+          onFailed?.(parsedMessage.data);
         }
-      } catch (error) {
-        console.error('Error parsing WebView message:', error);
+      } catch (e) {
+        if (message === 'PAYMENT_CLOSED') {
+          setIsCheckoutVisible(false);
+          onClose?.();
+        }
       }
     },
     [onClose, onSuccess, onFailed]
@@ -97,9 +131,6 @@ export const useKorapayCheckout = ({
 
   const initiatePayment = useCallback(() => {
     setIsCheckoutVisible(true);
-    setTimeout(() => {
-      webViewRef.current?.injectJavaScript('window.initializeKorapay(); true;');
-    }, 1000);
   }, []);
 
   const styles = StyleSheet.create({
@@ -128,13 +159,14 @@ export const useKorapayCheckout = ({
           <WebView
             ref={webViewRef}
             source={{ html: htmlContent }}
+            injectedJavaScript={injectedJavaScript}
             onMessage={handleMessage}
             style={styles.webview}
             scrollEnabled={false}
           />
         </View>
       ) : null,
-    [htmlContent, handleMessage, isCheckoutVisible, styles]
+    [htmlContent, injectedJavaScript, handleMessage, isCheckoutVisible, styles]
   );
 
   return {

@@ -1,3 +1,3 @@
-import { useKorapayCheckout } from './hooks/KorapayCheckout';
+import { useKoraCheckout } from './hooks/koraCheckout';
 
-export { useKorapayCheckout };
+export { useKoraCheckout };

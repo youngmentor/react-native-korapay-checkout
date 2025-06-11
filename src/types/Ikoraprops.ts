@@ -1,28 +1,28 @@
-export interface KorapayCustomer {
+export interface koraCustomer {
   name: string;
   email: string;
 }
 
-export interface KorapayMetadata {
+export interface koraMetadata {
   [key: string]: string;
 }
 
-export interface KorapayConfig {
+export interface koraConfig {
   publicKey: string;
   reference: string;
   amount: number;
   currency?: string;
-  customer: KorapayCustomer;
+  customer: koraCustomer;
   notification_url?: string;
   narration?: string;
   channels?: string[];
   default_channel?: string;
-  metadata?: KorapayMetadata;
+  metadata?: koraMetadata;
   containerId?: string;
   merchant_bears_cost?: boolean;
 }
 
-export interface KorapayCallbacks {
+export interface koraCallbacks {
   onClose?: () => void;
   onSuccess?: (data: any) => void;
   onFailed?: (data: any) => void;

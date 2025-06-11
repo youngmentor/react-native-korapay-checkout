@@ -1,7 +1,7 @@
 {
-  "name": "react-native-korapay-checkout",
+  "name": "react-native-kora-checkout",
   "version": "0.1.0",
-  "description": "A React Native SDK for integrating the Korapay payment gateway, enabling secure and seamless payment processing in mobile applications. This SDK provides an easy-to-use interface for initializing payments, managing transaction events, and customizing payment options, including multiple payment channels and customer details.",
+  "description": "A React Native SDK for integrating the Kora payment gateway, enabling secure and seamless payment processing in mobile applications. This SDK provides an easy-to-use interface for initializing payments, managing transaction events, and customizing payment options, including multiple payment channels and customer details.",
   "source": "./src/index.tsx",
   "main": "./lib/commonjs/index.js",
   "module": "./lib/module/index.js",
@@ -37,7 +37,7 @@
     "!**/.*"
   ],
   "scripts": {
-    "example": "yarn workspace react-native-korapay-checkout-example",
+    "example": "yarn workspace react-native-kora-checkout-example",
     "test": "jest",
     "typecheck": "tsc",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
@@ -47,19 +47,20 @@
   },
   "keywords": [
     "react-native",
-    "ios",
-    "android"
+    "payment",
+    "kora",
+    "sdk"
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/youngmentor/react-native-korapay-checkout.git"
+    "url": "git+https://github.com/youngmentor/react-native-kora-checkout.git"
   },
   "author": "code_with_bayo <olaleresuliton43@gmail.com> (https://github.com/youngmentor)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/youngmentor/react-native-korapay-checkout/issues"
+    "url": "https://github.com/youngmentor/react-native-kora-checkout/issues"
   },
-  "homepage": "https://github.com/youngmentor/react-native-korapay-checkout#readme",
+  "homepage": "https://github.com/youngmentor/react-native-kora-checkout#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
@@ -182,7 +183,7 @@
     ]
   },
   "codegenConfig": {
-    "name": "RNKorapayCheckoutSpec",
+    "name": "RNkoraCheckoutSpec",
     "type": "modules",
     "jsSrcsDir": "src",
     "outputDir": {
@@ -190,7 +191,7 @@
       "android": "android/generated"
     },
     "android": {
-      "javaPackageName": "com.korapaycheckout"
+      "javaPackageName": "com.koracheckout"
     }
   },
   "create-react-native-library": {
@@ -199,6 +200,7 @@
     "version": "0.45.5"
   },
   "dependencies": {
+    "expo": "^53.0.11",
     "react-native-webview": "^13.12.5"
   }
 }

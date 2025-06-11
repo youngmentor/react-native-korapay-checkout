@@ -1,9 +1,7 @@
 {
   "compilerOptions": {
     "rootDir": ".",
-    "paths": {
-      "react-native-korapay-checkout": ["./src/index"]
-    },
+    "paths": { "react-native-kora-checkout": ["./src/index"] },
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
     "esModuleInterop": true,
@@ -28,5 +26,6 @@
     "verbatimModuleSyntax": true,
     "declaration": true,
     "declarationMap": true
-  }
+  },
+  "extends": "expo/tsconfig.base"
 }

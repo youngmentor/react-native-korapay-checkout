@@ -1,25 +1,25 @@
-declare module 'react-native-korapay-checkout' {
-  export interface KorapayCustomer {
+declare module 'react-native-kora-checkout' {
+  export interface koraCustomer {
     name: string;
     email: string;
   }
 
-  export interface KorapayConfig {
+  export interface koraConfig {
     publicKey: string;
     reference: string;
     amount: number;
     currency: string;
-    customer: KorapayCustomer;
+    customer: koraCustomer;
   }
 
-  export interface KorapayCallbacks {
+  export interface koraCallbacks {
     onClose?: () => void;
     onSuccess?: (data: any) => void;
     onFailed?: (data: any) => void;
   }
 
-  export function useKorapayCheckout(params: {
-    paymentDetails: KorapayConfig;
+  export function usekoraCheckout(params: {
+    paymentDetails: koraConfig;
     onClose?: () => void;
     onSuccess?: (data: any) => void;
     onFailed?: (data: any) => void;

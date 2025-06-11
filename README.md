@@ -1,24 +1,24 @@
-# react-native-korapay-checkout
+# react-native-kora-checkout
 
-A React Native SDK for integrating the Korapay payment gateway, enabling secure and seamless payment processing in mobile applications. This SDK provides an easy-to-use interface for initializing payments, managing transaction events, and customizing payment options, including multiple payment channels and customer details.
+A React Native SDK for integrating the kora payment gateway, enabling secure and seamless payment processing in mobile applications. This SDK provides an easy-to-use interface for initializing payments, managing transaction events, and customizing payment options, including multiple payment channels and customer details.
 
 ## Installation
 
 ```sh
-npm install react-native-korapay-checkout
+npm install react-native-kora-checkout
 ```
 
 ## Usage
 
 ```js
-import { useKorapayCheckout } from 'react-native-korapay-checkout';
+import { usekoraCheckout } from 'react-native-kora-checkout';
 
 // ...
 
- const { CheckoutComponent, initiatePayment } = useKorapayCheckout(
+ const { CheckoutComponent, initiatePayment } = usekoraCheckout(
     {
       paymentDetails: {
-        publicKey: 'pk_test_***************************Ghx', /// log on to merchant.koraapi.com to get your own APi key 
+        publicKey: 'pk_test_***************************Ghx', /// log on to merchant.koraapi.com to get your own APi key
         reference: 'Generate random key for the refrence', //  example `key${Math.random()}`
         amount: 3000,
         currency: 'NGN',
@@ -33,7 +33,7 @@ import { useKorapayCheckout } from 'react-native-korapay-checkout';
     }
   );
 
-  then call the checkout component in the Jsx 
+  then call the checkout component in the Jsx
 
   where you want to display the checkout modal
 
