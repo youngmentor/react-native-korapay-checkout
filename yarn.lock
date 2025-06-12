@@ -6784,6 +6784,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"expo-web-browser@npm:~14.1.6":
+  version: 14.1.6
+  resolution: "expo-web-browser@npm:14.1.6"
+  peerDependencies:
+    expo: "*"
+    react-native: "*"
+  checksum: ea76e286ac15acea78333498e6ff5bce2032e242ed29b56901c8447f305caa6bbfc8f81a368293fa33c8daac0984b0c34d61310f93b01fdc81f582ef9e0bca2f
+  languageName: node
+  linkType: hard
+
 "expo@npm:^53.0.11":
   version: 53.0.11
   resolution: "expo@npm:53.0.11"
@@ -11847,6 +11857,7 @@ __metadata:
     eslint-config-prettier: ^9.0.0
     eslint-plugin-prettier: ^5.0.1
     expo: ^53.0.11
+    expo-web-browser: ~14.1.6
     jest: ^29.7.0
     prettier: ^3.0.3
     react: 18.3.1
