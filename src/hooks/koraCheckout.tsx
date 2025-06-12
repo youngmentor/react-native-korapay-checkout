@@ -18,63 +18,59 @@ export const useKoraCheckout = ({
   const [isCheckoutVisible, setIsCheckoutVisible] = useState(false);
 
   const injectedJavaScript = `
-    function loadkoraScript() {
-      const script = document.createElement('script');
-      script.src = 'https://korablobstorage.blob.core.windows.net/modal-bucket/korapay-collections.min.js';
-      script.async = true;
-      
-      script.onload = function() {
+  (function() {
+    const script = document.createElement('script');
+    script.src = 'https://korablobstorage.blob.core.windows.net/modal-bucket/korapay-collections.min.js';
+    script.async = true;
+
+    script.onload = function () {
+      if (window.Korapay) {
         window.ReactNativeWebView.postMessage('SCRIPT_LOADED');
-        initializekora();
-      };
-      
-      script.onerror = function() {
-        window.ReactNativeWebView.postMessage(JSON.stringify({
-          type: 'ERROR',
-          data: { message: 'Failed to load kora script' }
-        }));
-      };
-      
-      document.body.appendChild(script);
-    }
-
-    const initializekora = () => {
-      try {
-        if (!window.kora) {
-          throw new Error('kora object not found');
+        try {
+          window.Korapay.initialize({
+            key: "${paymentDetails.publicKey}",
+            reference: "${paymentDetails.reference}",
+            amount: ${paymentDetails.amount},
+            currency: "${paymentDetails.currency}",
+            customer: {
+              name: "${paymentDetails.customer.name}",
+              email: "${paymentDetails.customer.email}"
+            },
+            onClose: function () {
+              window.ReactNativeWebView.postMessage('PAYMENT_CLOSED');
+            },
+            onSuccess: function (data) {
+              window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'SUCCESS', data }));
+            },
+            onFailed: function (data) {
+              window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'FAILED', data }));
+            }
+          });
+        } catch (err) {
+          window.ReactNativeWebView.postMessage(JSON.stringify({
+            type: 'ERROR',
+            data: { message: err.message }
+          }));
         }
-
-        window.kora.initialize({
-          key: "${paymentDetails.publicKey}",
-          reference: "${paymentDetails.reference}",
-          amount: ${paymentDetails.amount},
-          currency: "${paymentDetails.currency}",
-          customer: {
-            name: "${paymentDetails.customer.name}",
-            email: "${paymentDetails.customer.email}"
-          },
-          onClose: function () {
-            window.ReactNativeWebView.postMessage('PAYMENT_CLOSED');
-          },
-          onSuccess: function (data) {
-            window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'SUCCESS', data }));
-          },
-          onFailed: function (data) {
-            window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'FAILED', data }));
-          }
-        });
-        window.ReactNativeWebView.postMessage('kora_INITIALIZED');
-      } catch (error) {
+      } else {
         window.ReactNativeWebView.postMessage(JSON.stringify({
           type: 'ERROR',
-          data: { message: error.message }
+          data: { message: 'Korapay not found after script load' }
         }));
       }
     };
 
-    loadkoraScript();
-    true;
-  `;
+    script.onerror = function () {
+      window.ReactNativeWebView.postMessage(JSON.stringify({
+        type: 'ERROR',
+        data: { message: 'Failed to load Kora script' }
+      }));
+    };
+
+    document.body.appendChild(script);
+  })();
+  true;
+`;
 
   const htmlContent = `
     <!DOCTYPE html>
