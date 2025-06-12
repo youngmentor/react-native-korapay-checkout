@@ -24,6 +24,7 @@ export const useKoraCheckout = ({
       script.async = true;
       
       script.onload = function() {
+        console.log('Kora script loaded');
         window.ReactNativeWebView.postMessage('SCRIPT_LOADED');
         initializekora();
       };
@@ -72,7 +73,9 @@ export const useKoraCheckout = ({
       }
     };
 
-    loadkoraScript();
+   setTimeout(() => {
+  loadkoraScript();
+}, 2000);
     true;
   `;
 
@@ -163,6 +166,11 @@ export const useKoraCheckout = ({
             onMessage={handleMessage}
             style={styles.webview}
             scrollEnabled={false}
+            javaScriptEnabled={true}
+            domStorageEnabled={true}
+            originWhitelist={['*']}
+            allowFileAccess={true}
+            mixedContentMode="always"
           />
         </View>
       ) : null,
