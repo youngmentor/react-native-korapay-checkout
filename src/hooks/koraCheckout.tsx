@@ -20,11 +20,10 @@ export const useKoraCheckout = ({
   const injectedJavaScript = `
     function loadkoraScript() {
       const script = document.createElement('script');
-      script.src = 'https://korablobstorage.blob.core.windows.net/modal-bucket/kora-collections.min.js';
+      script.src = 'https://korablobstorage.blob.core.windows.net/modal-bucket/korapay-collections.min.js';
       script.async = true;
       
       script.onload = function() {
-        console.log('Kora script loaded');
         window.ReactNativeWebView.postMessage('SCRIPT_LOADED');
         initializekora();
       };
@@ -73,9 +72,7 @@ export const useKoraCheckout = ({
       }
     };
 
-   setTimeout(() => {
-  loadkoraScript();
-}, 2000);
+    loadkoraScript();
     true;
   `;
 
@@ -166,11 +163,6 @@ export const useKoraCheckout = ({
             onMessage={handleMessage}
             style={styles.webview}
             scrollEnabled={false}
-            javaScriptEnabled={true}
-            domStorageEnabled={true}
-            originWhitelist={['*']}
-            allowFileAccess={true}
-            mixedContentMode="always"
           />
         </View>
       ) : null,
