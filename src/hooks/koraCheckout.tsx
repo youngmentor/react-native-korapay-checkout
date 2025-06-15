@@ -193,7 +193,6 @@ export const useKoraCheckout = ({
             console.log('Unknown message type:', parsedMessage.type);
         }
       } catch (e) {
-        // Handle non-JSON messages
         if (message === 'PAYMENT_CLOSED') {
           setIsCheckoutVisible(false);
           onClose?.();

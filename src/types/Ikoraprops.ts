@@ -11,8 +11,8 @@ export type KoraPaymentChannel =
   | 'card'
   | 'bank_transfer'
   | 'mobile_money'
-  | 'ussd'
-  | 'qr';
+  | 'pay_with_bank'
+  | 'ussd';
 
 export type MobileMoneyCurrency = 'KES' | 'GHS' | 'XAF' | 'XOF' | 'EGP';
 
