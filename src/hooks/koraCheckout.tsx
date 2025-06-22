@@ -31,7 +31,7 @@ export const useKoraCheckout = ({
   const injectedJavaScript = `
   (function() {
     const script = document.createElement('script');
-    script.src = 'https://korablobstorage.blob.core.windows.net/modal-bucket/koraapi-collections.min.js';
+    script.src = 'https://korablobstorage.blob.core.windows.net/modal-bucket/korapay-collections.min.js';
     script.async = true;
 
     script.onload = function () {
