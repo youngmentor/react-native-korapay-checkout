@@ -1,6 +1,6 @@
 {
   "name": "react-native-kora-checkout",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "A React Native SDK for integrating the Kora payment gateway, enabling secure and seamless payment processing in mobile applications. This SDK provides an easy-to-use interface for initializing payments, managing transaction events, and customizing payment options, including multiple payment channels and customer details.",
   "source": "./src/index.tsx",
   "main": "./lib/commonjs/index.js",
