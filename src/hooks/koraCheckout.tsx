@@ -21,7 +21,6 @@ export const useKoraCheckout = ({
   const webViewRef = useRef<WebView | null>(null);
   const [isCheckoutVisible, setIsCheckoutVisible] = useState(false);
 
-  // Helper function to safely stringify values for injection
   const safeStringify = (value: any) => {
     if (value === undefined || value === null) return 'undefined';
     if (typeof value === 'string') return `"${value.replace(/"/g, '\\"')}"`;
@@ -31,7 +30,7 @@ export const useKoraCheckout = ({
   const injectedJavaScript = `
   (function() {
     const script = document.createElement('script');
-    script.src = 'https://korablobstorage.blob.core.windows.net/modal-bucket/korapay-collections.min.js';
+    script.src = 'https://korablobstorage.blob.core.windows.net/modal-bucket/staging-collections.min.js';
     script.async = true;
 
     script.onload = function () {
@@ -70,8 +69,7 @@ export const useKoraCheckout = ({
               window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'TOKENIZED', data }));
             }
           };
-
-          // Remove undefined properties
+          
           Object.keys(koraConfig).forEach(key => {
             if (koraConfig[key] === undefined) {
               delete koraConfig[key];
